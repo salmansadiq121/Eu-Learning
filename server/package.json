@@ -10,7 +10,7 @@
 
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only server.ts",
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "build":"tsc"
   },
   "author": "Mumammad Salman Sadiq",
