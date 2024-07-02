@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "../server": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.js" }
+  ]
+}
