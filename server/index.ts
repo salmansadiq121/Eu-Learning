@@ -24,9 +24,10 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 
 // Cross Origin Resource sharing
+// `http://localhost:3000`
 app.use(
   cors({
-    origin: [`http://localhost:3000`],
+    origin: [`https://eulearning.vercel.app`],
     credentials: true,
   })
 );
