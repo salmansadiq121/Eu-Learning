@@ -2,8 +2,8 @@
 import React from "react";
 import Heading from "../utils/Heading";
 import AdminProtected from "../hooks/adminProtected";
-import AdminSidebar from "../components/Admin/sidebar/AdminSidebar";
 import DashboardHero from "../components/Admin/DashboardHero";
+import AdminLayout from "../components/Admin/sidebar/AdminLayout";
 
 type Props = {};
 
@@ -16,14 +16,9 @@ const Admin = (props: Props) => {
           description="EUlearning is a platform for student to learn & get help from teachers."
           keywords="Programming , MERN Stack , Redux, Contaxt API"
         />
-        <div className="flex">
-          <div className="1500px:w-[12%] w-1/5">
-            <AdminSidebar />
-          </div>
-          <div className="w-[85%]">
-            <DashboardHero isDashboard={true} />
-          </div>
-        </div>
+        <AdminLayout>
+          <DashboardHero isDashboard={true} />
+        </AdminLayout>
       </AdminProtected>
     </div>
   );

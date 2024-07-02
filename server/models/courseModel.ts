@@ -63,16 +63,22 @@ const reviewSchema = new Schema<IReview>(
   { timestamps: true }
 );
 
-const linkSchema = new Schema<ILink>({
-  title: String,
-  url: String,
-});
+const linkSchema = new Schema<ILink>(
+  {
+    title: String,
+    url: String,
+  },
+  { timestamps: true }
+);
 
-const commmentSchema = new Schema<IComment>({
-  user: Object,
-  question: String,
-  questionReplies: [Object],
-});
+const commmentSchema = new Schema<IComment>(
+  {
+    user: Object,
+    question: String,
+    questionReplies: [Object],
+  },
+  { timestamps: true }
+);
 
 const courseDataSchema = new Schema<ICourseData>(
   {

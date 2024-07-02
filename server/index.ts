@@ -11,6 +11,7 @@ import OrderRoute from "./routes/orderRoute";
 import NotificationRoute from "./routes/notificationRoute";
 import AnalyticsRoute from "./routes/analyticsRoute";
 import LayoutRoute from "./routes/layoutRoute";
+import { rateLimit } from "express-rate-limit";
 
 // Configure
 dotenv.config();
@@ -29,6 +30,14 @@ app.use(
     credentials: true,
   })
 );
+
+// Api Requiest Rate Limit
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+});
 
 // APIs Routes
 app.use("/api/v1/auth", UserRoute);
@@ -51,6 +60,9 @@ app.all("*", (req: Request, res: Response, next: NextFunction) => {
   const err = new Error(`Route  ${req.originalUrl} not found!`) as any;
   (res.statusCode = 404), next(err);
 });
+
+// Rate Limit Middleware
+app.use(limiter);
 
 // Error Middleware
 app.use(ErrorMiddleware);

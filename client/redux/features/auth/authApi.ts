@@ -84,7 +84,7 @@ export const authApi: any = apiSlice.injectEndpoints({
       },
     }),
     // Logout User
-    logOut: builder.query({
+    logOut: builder.mutation({
       query: () => ({
         url: "api/v1/auth/logoutUser",
         method: "GET",
@@ -106,5 +106,5 @@ export const {
   useActivationMutation,
   useLoginMutation,
   useSocialAuthMutation,
-  useLogOutQuery,
+  useLogOutMutation,
 } = authApi;

@@ -32,7 +32,7 @@ const UserAnalytics: FC<Props> = ({ isDashboard }) => {
     <div
       className={`w-full ${
         isDashboard
-          ? "dark:bg-[#111C43] bg-gray-200 rounded-md h-[65vh]"
+          ? "dark:bg-[#111C43] bg-gray-200 rounded-md h-[68vh]"
           : "dark:bg-gray-900  min-h-screen"
       }   dark:text-white text-black mt-[3.5rem] p-4`}
     >
@@ -61,7 +61,7 @@ const UserAnalytics: FC<Props> = ({ isDashboard }) => {
             } flex items-center justify-center`}
           >
             <ResponsiveContainer
-              width={isDashboard ? "100%" : "95%"}
+              width={isDashboard ? "100%" : "97%"}
               height={isDashboard ? "100%" : "80%"}
             >
               <ComposedChart

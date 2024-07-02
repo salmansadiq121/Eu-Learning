@@ -1,11 +1,13 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import SideBarProfile from "./SideBarProfile";
-import { useLogOutQuery } from "@/redux/features/auth/authApi";
-import { signOut } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import ProfileInfo from "./ProfileInfo";
 import ChangePassword from "./ChangePassword";
+import { useLogOutMutation } from "@/redux/features/auth/authApi";
+import toast from "react-hot-toast";
+import EnrolledCourses from "./EnrolledCourses";
+import { useGetUserAllCoursesQuery } from "@/redux/features/courses/coursesApi";
 
 type Props = {
   user: any;
@@ -13,20 +15,33 @@ type Props = {
 
 const Profile: FC<Props> = ({ user }) => {
   const [scroll, setScroll] = useState(false);
+  const router = useRouter();
   const [avatar, setAvatar] = useState(
     user?.avatar?.url ? user?.avatar?.url : ""
   );
   const [active, setActive] = useState(1);
-  const [logout, setLogout] = useState(false);
-  const {} = useLogOutQuery(undefined, () => {
-    skip: !logout ? true : false;
-  });
+  const [logOut, { isSuccess, error }] = useLogOutMutation();
+  const { data, isLoading } = useGetUserAllCoursesQuery(undefined, {});
+  const [courses, setCourses] = useState<any>([]);
 
   //   Logout Handler
   const logoutHandler = async () => {
-    setLogout(true);
-    await signOut();
+    await logOut();
+    router.push("/");
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Logout successfully!");
+    }
+
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as any;
+        toast.error(errorData.data.message);
+      }
+    }
+  }, [error, isSuccess]);
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
@@ -37,6 +52,21 @@ const Profile: FC<Props> = ({ user }) => {
       }
     });
   }
+
+  // User Courses
+
+  useEffect(() => {
+    if (data) {
+      const filterCourses = user?.courses
+        .map((userCourse: any) =>
+          data.courses.find((course: any) => course._id === userCourse._id)
+        )
+        .filter((course: any) => course !== undefined);
+
+      setCourses(filterCourses);
+    }
+    // eslint-disable-next-line
+  }, [data]);
   return (
     <div className="w-[99%] sm:w-[85%]  flex mx-auto">
       <div
@@ -58,9 +88,16 @@ const Profile: FC<Props> = ({ user }) => {
           <ProfileInfo avatar={user?.avatar?.url} user={user} />
         </div>
       )}
+      {/* Change Password */}
       {active === 2 && (
         <div className="w-full h-full mt-[4.5rem] bg-transparent  px-4 ">
           <ChangePassword />
+        </div>
+      )}
+      {/* Enrolled Courses */}
+      {active === 3 && (
+        <div className="w-full h-full mt-[4.5rem] bg-transparent  px-4 ">
+          <EnrolledCourses courses={courses} />
         </div>
       )}
     </div>

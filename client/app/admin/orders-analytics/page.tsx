@@ -2,9 +2,8 @@
 import Heading from "../../utils/Heading";
 import AdminProtected from "../../hooks/adminProtected";
 import React from "react";
-import AdminSidebar from "../../components/Admin/sidebar/AdminSidebar";
-import DashboardHeader from "../../components/Admin/DashboardHeader";
 import OrderAnalytics from "../../components/Admin/Analytics/OrderAnalytics";
+import AdminLayout from "@/app/components/Admin/sidebar/AdminLayout";
 
 type Props = {};
 
@@ -17,15 +16,10 @@ const Page = (props: Props) => {
           description="EUlearning is a platform for students to learn & get help from teachers."
           keywords="Programming, MERN Stack, Redux, Context API"
         />
-        <div className="flex">
-          <div className="1500px:w-[12%] w-1/5">
-            <AdminSidebar />
-          </div>
-          <div className="w-4/5 flex flex-col">
-            <DashboardHeader />
-            <OrderAnalytics />
-          </div>
-        </div>
+
+        <AdminLayout>
+          <OrderAnalytics />
+        </AdminLayout>
       </AdminProtected>
     </div>
   );

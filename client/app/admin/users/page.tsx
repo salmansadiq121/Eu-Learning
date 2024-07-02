@@ -2,9 +2,8 @@
 import Heading from "../../utils/Heading";
 import AdminProtected from "../../hooks/adminProtected";
 import React from "react";
-import AdminSidebar from "../../components/Admin/sidebar/AdminSidebar";
-import DashboardHero from "../../components/Admin/DashboardHero";
 import AllUsers from "../../components/Admin/Users/AllUsers";
+import AdminLayout from "@/app/components/Admin/sidebar/AdminLayout";
 
 type Props = {};
 
@@ -17,15 +16,10 @@ const page = (props: Props) => {
           description="EUlearning is a platform for student to learn & get help from teachers."
           keywords="Programming , MERN Stack , Redux, Contaxt API"
         />
-        <div className="flex h-screen">
-          <div className="1500px:w-[12%] w-1/5">
-            <AdminSidebar />
-          </div>
-          <div className="w-[85%]">
-            <DashboardHero />
-            <AllUsers isTeam={false} />
-          </div>
-        </div>
+
+        <AdminLayout>
+          <AllUsers isTeam={false} />
+        </AdminLayout>
       </AdminProtected>
     </div>
   );

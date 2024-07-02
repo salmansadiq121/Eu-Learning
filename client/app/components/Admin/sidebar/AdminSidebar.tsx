@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography } from "@mui/material";
-import { signOut } from "next-auth/react";
+// import { signOut } from "next-auth/react";
 import "react-pro-sidebar/dist/css/styles.css";
 import {
   HomeOutlinedIcon,
@@ -25,7 +25,9 @@ import { useSelector } from "react-redux";
 import Link from "next/link.js";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useLogOutQuery } from "../../../../redux/features/auth/authApi";
+// import { useLogOutMutation } from "@/redux/features/auth/authApi";
+// import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface ItemProps {
   title: string;
@@ -48,30 +50,45 @@ const Item: FC<ItemProps> = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
+interface Props {
+  isCollapsed?: boolean;
+  setIsCollapsed?: any;
+}
+
 // AdminSidebar
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ isCollapsed, setIsCollapsed }: Props) => {
   const { user } = useSelector((state: any) => state.auth);
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
+  const router = useRouter();
 
-  const [logout, setLogout] = useState(false);
-  const {} = useLogOutQuery(undefined, () => {
-    skip: !logout ? true : false;
-  });
+  // const [logOut, { isSuccess, error }] = useLogOutMutation();
 
   useEffect(() => setMounted(true), []);
 
   if (!mounted) {
     return null;
   }
+  //   Logout Handler
+  // const logoutHandler = async () => {
+  //   await logOut();
+  //   router.push("/");
+  // };
 
-  const logoutHandler = async () => {
-    setLogout(true);
-    await signOut();
-  };
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     toast.success("Logout successfully!");
+  //   }
+
+  //   if (error) {
+  //     if ("data" in error) {
+  //       const errorData = error as any;
+  //       toast.error(errorData.data.message);
+  //     }
+  //   }
+  // }, [error, isSuccess]);
 
   return (
     <Box
@@ -124,11 +141,10 @@ const AdminSidebar = () => {
                 alignItems=" center"
                 ml="15px"
               >
-                <Link href="/">
-                  <h3 className="text-[22px] font-semibold font-Poppins uppercase dark:text-white text-black">
-                    <span className="text-purple-700">EU</span>Learning
-                  </h3>
-                </Link>
+                <h3 className="text-[22px] text-gradient font-bold font-Poppins uppercase dark:text-white text-black">
+                  EULearning
+                </h3>
+
                 <IconButton
                   onClick={() => setIsCollapsed(!isCollapsed)}
                   className="inline-block "
@@ -167,7 +183,7 @@ const AdminSidebar = () => {
                 </Typography>
                 <Typography
                   variant="h6"
-                  className="!text-[20px] font-medium font-Poppins capitalize text-black dark:text-white"
+                  className="!text-[20px] font-semibold font-Poppins capitalize text-black dark:text-white"
                   sx={{ m: "10px 0 0 0 " }}
                 >
                   - {user?.role}

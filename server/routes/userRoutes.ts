@@ -26,41 +26,25 @@ router.post("/activate-user", activateUser);
 // Login User
 router.post("/login-user", LoginUserController);
 // Logout User
-router.get("/logoutUser", updateAccessToken, isAuthenticated, logoutUser);
+router.get("/logoutUser", isAuthenticated, logoutUser);
 // Updated Access token
 router.get("/refresh", updateAccessToken);
 // Get User Info
-router.get("/user-info", updateAccessToken, isAuthenticated, getUserInfo);
+router.get("/user-info", isAuthenticated, getUserInfo);
 // Social Auth
 router.post("/social-auth", socialAuth);
 // Update User Info
-router.put(
-  "/update-UserInfo",
-  updateAccessToken,
-  isAuthenticated,
-  UpdateUserInfo
-);
+router.put("/update-UserInfo", isAuthenticated, UpdateUserInfo);
 
 // Update Password
-router.put(
-  "/update-user-password",
-  updateAccessToken,
-  isAuthenticated,
-  updateUserPassword
-);
+router.put("/update-user-password", isAuthenticated, updateUserPassword);
 
 // Add new or Update Avatar
-router.put(
-  "/update-user-avatar",
-  updateAccessToken,
-  isAuthenticated,
-  updateProfilePicture
-);
+router.put("/update-user-avatar", isAuthenticated, updateProfilePicture);
 
 // Get All Users----------for Admin only
 router.get(
   "/get-all-users",
-  updateAccessToken,
   isAuthenticated,
   authorizedRole("admin"),
   getAllUsers
@@ -69,7 +53,6 @@ router.get(
 // Update User Role ----------only for admin
 router.put(
   "/update-user-role",
-  updateAccessToken,
   isAuthenticated,
   authorizedRole("admin"),
   updateUserRole
@@ -78,7 +61,6 @@ router.put(
 // Delete User Route
 router.delete(
   "/delete-user/:id",
-  updateAccessToken,
   isAuthenticated,
   authorizedRole("admin"),
   deleteUser

@@ -39,6 +39,7 @@ const sendMail = async (option: EmailOptions): Promise<void> => {
   };
 
   await transporter.sendMail(mailOptions);
+  console.log("Mail send successfully!");
 };
 
 export default sendMail;

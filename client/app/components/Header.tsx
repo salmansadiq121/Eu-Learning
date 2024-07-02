@@ -8,14 +8,15 @@ import CustomModle from "../utils/CustomModle";
 import Login from "./Auth/Login";
 import SignUp from "./Auth/SignUp";
 import Verification from "./Auth/Verification";
-import { useSelector } from "react-redux";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import {
-  useLogOutQuery,
+  useLogOutMutation,
   useSocialAuthMutation,
 } from "@/redux/features/auth/authApi";
 import toast from "react-hot-toast";
+import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import { useSelector } from "react-redux";
 
 type Props = {
   open: boolean;
@@ -28,42 +29,44 @@ type Props = {
 const Header: FC<Props> = ({ activeItem, setOpen, open, route, setRoute }) => {
   const [active, setActive] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
+  const {
+    data: userData,
+    isLoading,
+    refetch,
+  } = useLoadUserQuery(undefined, { refetchOnMountOrArgChange: true });
   const { user } = useSelector((state: any) => state.auth);
   const { data } = useSession();
   const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
-  const [logout, setLogout] = useState(false);
-  const {} = useLogOutQuery(undefined, () => {
-    skip: !logout ? true : false;
-  });
+
   // Social
   useEffect(() => {
-    if (!user) {
-      if (data) {
-        socialAuth({
-          email: data?.user?.email,
-          name: data?.user?.name,
-          avatar: data?.user?.image,
-        });
+    if (!isLoading) {
+      if (!user) {
+        if (data) {
+          socialAuth({
+            email: data?.user?.email,
+            name: data?.user?.name,
+            avatar: data?.user?.image,
+          });
+          refetch();
+        }
       }
-    }
-    if (data === null) {
-      if (isSuccess) {
-        setOpen(false);
-        toast.success("Login Successfully!");
-      }
-    }
-    if (error) {
-      if ("data" in error) {
-        const errorData = error as any;
-        toast.error(errorData.data.message);
-      }
-    }
 
-    if (data === null) {
-      setLogout(true);
+      if (data === null) {
+        if (isSuccess) {
+          setOpen(false);
+          toast.success("Login Successfully!");
+        }
+      }
+      if (error) {
+        if ("data" in error) {
+          const errorData = error as any;
+          toast.error(errorData.data.message);
+        }
+      }
     }
     // eslint-disable-next-line
-  }, [data, user]);
+  }, [data, user, isLoading]);
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
@@ -84,15 +87,21 @@ const Header: FC<Props> = ({ activeItem, setOpen, open, route, setRoute }) => {
     }
   };
   return (
-    <div className="w-full relative">
+    <div className="w-full relative  ">
       <div
         className={`${
           active
-            ? "dark:opacity-50 dark:bg-gradient-to-b dark:from-gray-900  dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c] shadow-xl transition duration-500"
+            ? "dark:opacity-50 dark:bg-gradient-to-b  dark:from-gray-900  dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c] shadow-xl transition duration-500"
             : "w-full border-b dark:border-[#ffffff1c] h-[80px] z-[80] dark:shadow shadow-md"
         }`}
+        // style={{
+        //   backgroundImage:
+        //     theme === "dark"
+        //       ? ""
+        //       : "linear-gradient(to right, rgba(0, 169, 247, 0.5), rgba(0, 169, 247, 0.5), rgba(0, 169, 247, 0.5))",
+        // }}
       >
-        <div className="w-[95%] 800px:w-[92%] m-auto py-2 h-full">
+        <div className="w-[95%] 800px:w-[92%] m-auto py-2 h-full flex items-center justify-center">
           <div className="w-full h-[80px] flex items-center justify-between p-3">
             <div className="">
               <Link
@@ -125,7 +134,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, open, route, setRoute }) => {
                   <Link href="/profile">
                     <Image
                       src={
-                        user.avatar ? user?.avatar?.url : "/defaultProfile.png"
+                        user?.avatar ? user?.avatar?.url : "/defaultProfile.png"
                       }
                       alt="Avatar"
                       width={38}
@@ -160,15 +169,42 @@ const Header: FC<Props> = ({ activeItem, setOpen, open, route, setRoute }) => {
           >
             <div className="w-[70%] fixed z-[99999999] h-screen bg-white dark:bg-slate-900 dark:bg-opacity-95 top-0 right-0">
               {/* Profile Image */}
-              <div className="w-full ">
-                <HiOutlineUserCircle
-                  className=" cursor-pointer dark:text-white text-black absolute top-2 right-3 "
-                  size="35"
-                  onClick={() => setOpen(true)}
-                />
+              <div className="w-full flex items-center justify-center mt-8 ">
+                {user ? (
+                  <>
+                    <Link href="/profile">
+                      <Image
+                        src={
+                          user?.avatar
+                            ? user?.avatar?.url
+                            : "/defaultProfile.png"
+                        }
+                        alt="Avatar"
+                        width={38}
+                        height={38}
+                        style={{
+                          width: "2.5rem",
+                          height: "2.5rem",
+                          borderRadius: "50%",
+                          cursor: "pointer",
+                          border:
+                            activeItem === 5 ? "2px solid #37a39a" : "none",
+                        }}
+                      />
+                    </Link>
+                  </>
+                ) : (
+                  <HiOutlineUserCircle
+                    className=" cursor-pointer hidden 800px:block dark:text-white text-black px-2"
+                    size="45"
+                    onClick={() => setOpen(true)}
+                  />
+                )}
               </div>
               {/* Nav Items */}
-              <NavItems activeItem={activeItem} isMobile={true} />
+              <div className="mt-[-2rem]">
+                <NavItems activeItem={activeItem} isMobile={true} />
+              </div>
               <br />
               <br />
               <p className="text-[14px] font-medium sm:text-[16px] text-center text-black px-3 pl-5 dark:text-white">
@@ -188,6 +224,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, open, route, setRoute }) => {
               setRoute={setRoute}
               activeItem={activeItem}
               component={Login}
+              refetch={refetch}
             />
           )}
         </>

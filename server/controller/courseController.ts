@@ -95,28 +95,28 @@ export const getSingleCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const courseId = req.params.id;
-      const isCacheExist = await redis.get(courseId);
+      // const isCacheExist = await redis.get(courseId);
 
-      if (isCacheExist) {
-        const course = JSON.parse(isCacheExist);
-        res.status(200).send({
-          success: true,
-          message: "Single Course",
-          course,
-        });
-      } else {
-        const course = await CourseModel.findById(req.params.id).select(
-          "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
-        );
+      // if (isCacheExist) {
+      //   const course = JSON.parse(isCacheExist);
+      //   res.status(200).send({
+      //     success: true,
+      //     message: "Single Course Redis",
+      //     course,
+      //   });
+      // } else {
+      const course = await CourseModel.findById(req.params.id).select(
+        "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+      );
 
-        await redis.set(courseId, JSON.stringify(course), "EX", 604800); //7 days
+      await redis.set(courseId, JSON.stringify(course), "EX", 604800); //7 days
 
-        res.status(200).send({
-          success: true,
-          message: "Single Course",
-          course,
-        });
-      }
+      res.status(200).send({
+        success: true,
+        message: "Single Course",
+        course,
+      });
+      // }
     } catch (error: any) {
       console.log(error);
       return next(new ErrorHandler(error.message, 400));
@@ -128,29 +128,29 @@ export const getSingleCourse = CatchAsyncError(
 export const getAllCourses = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const isCacheExist = await redis.get("all courses");
+      // const isCacheExist = await redis.get("all courses");
 
-      if (isCacheExist) {
-        const courses = JSON.parse(isCacheExist);
-        res.status(200).send({
-          success: true,
-          courses,
-        });
-        console.log("redis");
-      } else {
-        const courses = await CourseModel.find().select(
-          "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
-        );
+      // if (isCacheExist) {
+      //   const courses = JSON.parse(isCacheExist);
+      //   res.status(200).send({
+      //     success: true,
+      //     courses,
+      //   });
+      // } else {
+      const courses = await CourseModel.find().select(
+        "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+      );
 
-        await redis.set("all courses", JSON.stringify(courses));
-        console.log("mongo");
+      await redis.set("all courses", JSON.stringify(courses));
+      console.log("mongo");
 
-        res.status(200).send({
-          totol: courses.length,
-          success: true,
-          courses,
-        });
-      }
+      res.status(200).send({
+        totol: courses.length,
+        success: true,
+        message: "All Courses List M",
+        courses,
+      });
+      // }
     } catch (error: any) {
       console.log(error);
       return next(new ErrorHandler(error.message, 400));
@@ -289,6 +289,8 @@ export const addAnswer = CatchAsyncError(
       const newAnswer: any = {
         user: req.user,
         answer,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       // Add this answer to our course content
@@ -390,12 +392,19 @@ export const addReviewInCourse = CatchAsyncError(
 
       await course?.save();
 
-      const notification = {
+      await redis.set(courseId, JSON.stringify(course), "EX", 604800); //7days
+
+      // const notification = {
+      //   title: "New Review Received",
+      //   message: `${req.user?.name} has given a review in ${course?.name}`,
+      // };
+
+      // Create a Notification
+      await notificationModel.create({
+        user: req.user?._id,
         title: "New Review Received",
         message: `${req.user?.name} has given a review in ${course?.name}`,
-      };
-
-      // Create notification
+      });
 
       res.status(200).send({
         success: true,
@@ -437,6 +446,8 @@ export const addReplyToReview = CatchAsyncError(
       const replyData: any = {
         user: req.user,
         comment,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       };
 
       if (!review.commentReplies) {
@@ -446,6 +457,8 @@ export const addReplyToReview = CatchAsyncError(
       review.commentReplies?.push(replyData);
 
       await course?.save();
+
+      await redis.set(courseId, JSON.stringify(course), "EX", 604800); //7days
 
       res.status(200).send({
         success: true,

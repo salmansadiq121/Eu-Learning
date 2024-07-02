@@ -50,7 +50,7 @@ const NavItems: FC<Props> = ({ activeItem, isMobile }) => {
       </div>
 
       {isMobile && (
-        <div className="800px:hidden mt-5">
+        <div className="800px:hidden mt-4">
           <div className="w-full text-center py-4">
             <Link href="/" passHref>
               <span
@@ -64,7 +64,7 @@ const NavItems: FC<Props> = ({ activeItem, isMobile }) => {
               </span>
             </Link>
           </div>
-          <div className="w-full text-center py-6 ">
+          <div className="w-full text-center py-2 ">
             {navItemsData &&
               navItemsData.map((item, index) => (
                 <Link href={item.url} key={index} passHref className="mt-2">

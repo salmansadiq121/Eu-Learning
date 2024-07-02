@@ -162,7 +162,7 @@ const CourseInformation: FC<Props> = ({
                 setCourseInfo({ ...courseInfo, categories: e.target.value })
               }
               id="level"
-              className={`${style.input}`}
+              className={`${style.input} dark:bg-gray-800`}
             >
               <option value="">Select Category</option>
               {categories &&

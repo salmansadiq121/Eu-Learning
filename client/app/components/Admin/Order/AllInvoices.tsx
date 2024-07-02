@@ -45,7 +45,7 @@ const AllInvoices: FC<Props> = ({ isDashboard }) => {
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.3 },
-    { field: "userName", headerName: "Name", flex: isDashboard ? 0.5 : 0.6 },
+    { field: "userName", headerName: "Name", flex: isDashboard ? 0.4 : 0.4 },
     ...(isDashboard
       ? []
       : [
@@ -83,64 +83,7 @@ const AllInvoices: FC<Props> = ({ isDashboard }) => {
         ]),
   ];
 
-  const rows: any = [
-    {
-      id: "12342341",
-      userName: "Salman Sadiq",
-      email: "msalman121@gmail.com",
-      title: "React Js Course",
-      price: "12",
-      createdAt: "2 days ago",
-    },
-    {
-      id: "12442341",
-      userName: "Salman Sadiq",
-      email: "msalman121@gmail.com",
-      title: "React Js Course",
-      price: "12",
-      createdAt: "2 days ago",
-    },
-    {
-      id: "12345341",
-      userName: "Salman Sadiq",
-      email: "msalman121@gmail.com",
-      title: "React Js Course",
-      price: "12",
-      createdAt: "2 days ago",
-    },
-    {
-      id: "12342641",
-      userName: "Salman Sadiq",
-      email: "msalman121@gmail.com",
-      title: "React Js Course",
-      price: "12",
-      createdAt: "2 days ago",
-    },
-    {
-      id: "12342741",
-      userName: "Salman Sadiq",
-      email: "msalman121@gmail.com",
-      title: "React Js Course",
-      price: "12",
-      createdAt: "2 days ago",
-    },
-    {
-      id: "12342841",
-      userName: "Salman Sadiq",
-      email: "msalman121@gmail.com",
-      title: "React Js Course",
-      price: "12",
-      createdAt: "2 days ago",
-    },
-    {
-      id: "12349341",
-      userName: "Salman Sadiq",
-      email: "msalman121@gmail.com",
-      title: "React Js Course",
-      price: "12",
-      createdAt: "2 days ago",
-    },
-  ];
+  const rows: any = [];
 
   ordersData &&
     ordersData.forEach((item: any) => {
@@ -154,14 +97,14 @@ const AllInvoices: FC<Props> = ({ isDashboard }) => {
       });
     });
   return (
-    <div className={`${isDashboard ? "mt-[0px]" : "mt-[3.5rem]"}`}>
+    <div className={`${isDashboard ? "mt-[0px]" : "mt-[5rem]"} message`}>
       {isLoading ? (
         <Loader />
       ) : (
         <Box m={isDashboard ? "0" : "40px"}>
           <Box
             m={isDashboard ? "0" : "40px 0 0 0"}
-            height={isDashboard ? "70vh" : "90vh"}
+            height={isDashboard ? "76vh" : "80vh"}
             overflow={"hidden"}
             sx={{
               "& .MuiDataGrid-root": {
