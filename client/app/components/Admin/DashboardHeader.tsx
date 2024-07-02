@@ -27,20 +27,28 @@ const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
   });
   const [updateNotification, { isSuccess }] = useUpdateNotificationMutation();
   const [notifications, setNotifications] = useState<any>([]);
-  const [audio] = useState(new Audio("/level-up-191997.mp3"));
+  const [audio] = useState(
+    typeof window !== "undefined" ? new Audio("/level-up-191997.mp3") : null
+  );
 
   useEffect(() => {
+    if (audio) {
+      audio.load();
+    }
+  }, [audio]);
+
+  useEffect(() => {
+    const notificationPlayer = () => {
+      if (audio) {
+        audio.play();
+      }
+    };
+
     if (isSuccess) {
       refetch();
       notificationPlayer();
     }
-    audio.load();
-    // eslint-disable-next-line
-  }, [isSuccess]);
-
-  const notificationPlayer = () => {
-    audio.play();
-  };
+  }, [isSuccess, refetch, audio]);
 
   useEffect(() => {
     if (data) {
@@ -48,15 +56,15 @@ const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
         data?.notification?.filter((item: any) => item.status === "unread")
       );
     }
-    audio.load();
-    // eslint-disable-next-line
   }, [data]);
 
   useEffect(() => {
     const handleNewNotification = (data: any) => {
-      notificationPlayer();
       if (!isQueryLoading && refetch) {
         refetch();
+      }
+      if (audio) {
+        audio.play();
       }
     };
 
@@ -65,21 +73,13 @@ const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
     return () => {
       socketId.off("newNotification", handleNewNotification);
     };
-
-    // eslint-disable-next-line
-  }, [socketId, refetch, isQueryLoading]);
-
-  // useEffect(() => {
-  //   socketId.on("newNotification", (data) => {
-  //     notificationPlayer();
-  //     refetch();
-  //   });
-  //   // eslint-disable-next-line
-  // }, []);
+    //eslint-disable-next-line
+  }, [socketId, refetch, isQueryLoading, audio]);
 
   const updateNotificationData = async (id: any) => {
     await updateNotification(id);
   };
+
   return (
     <div className="w-full flex items-center justify-end p-6 fixed top-1 z-[999] right-0">
       <ThemeSwitcher />
