@@ -16,7 +16,7 @@ const orderRoute_1 = __importDefault(require("./routes/orderRoute"));
 const notificationRoute_1 = __importDefault(require("./routes/notificationRoute"));
 const analyticsRoute_1 = __importDefault(require("./routes/analyticsRoute"));
 const layoutRoute_1 = __importDefault(require("./routes/layoutRoute"));
-const express_rate_limit_1 = require("express-rate-limit");
+// const express_rate_limit_1 = require("express-rate-limit");
 // Configure dotenv
 dotenv_1.default.config();
 exports.app = (0, express_1.default)();
@@ -33,14 +33,14 @@ exports.app.use((0, cors_1.default)({
     credentials: true,
 }));
 // API Request Rate Limit
-const limiter = (0, express_rate_limit_1.rateLimit)({
-    windowMs: 15 * 60 * 1000,
-    limit: 100,
-    standardHeaders: true,
-    legacyHeaders: false,
-});
+// const limiter = (0, express_rate_limit_1.rateLimit)({
+//     windowMs: 15 * 60 * 1000,
+//     limit: 100,
+//     standardHeaders: true,
+//     legacyHeaders: false,
+// });
 // Apply the rate limiting middleware to all requests
-exports.app.use(limiter);
+// exports.app.use(limiter);
 // APIs Routes
 exports.app.use("/api/v1/auth", userRoutes_1.default);
 exports.app.use("/api/v1/course", courseRoute_1.default);
