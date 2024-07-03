@@ -2,15 +2,9 @@
   "name": "server",
   "version": "1.0.0",
   "description": "LMS Application",
-  "type": "commonjs",
-  "main": "build/server.js",
-  "engines": {
-    "node": "18.x"
-  },
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only server.ts",
-    "start": "node build/server.js",
-    "build":"tsc"
+    "start": "node server.ts",
   },
   "author": "Mumammad Salman Sadiq",
   "license": "ISC",
