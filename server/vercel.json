@@ -12,4 +12,5 @@
       "src": "/(.*)",
       "destination": "/build/server.js"
     }
-  ]  }
+  ] 
+}
