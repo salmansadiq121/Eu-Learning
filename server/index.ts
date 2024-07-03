@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-export const app = express();
 import morgan from "morgan";
 import dotenv from "dotenv";
 import { ErrorMiddleware } from "./middleware/error";
@@ -13,8 +12,10 @@ import AnalyticsRoute from "./routes/analyticsRoute";
 import LayoutRoute from "./routes/layoutRoute";
 import { rateLimit } from "express-rate-limit";
 
-// Configure
+// Configure dotenv
 dotenv.config();
+
+export const app = express();
 
 // Body Parser
 app.use(express.json({ limit: "50mb" }));
@@ -23,22 +24,26 @@ app.use(morgan("dev"));
 // Cookies Parser
 app.use(cookieParser());
 
-// Cross Origin Resource sharing
-// `http://localhost:3000`
+// Cross-Origin Resource Sharing (CORS)
 app.use(
   cors({
-    origin: [`https://eulearning.vercel.app`],
+    origin: process.env.CORS_ORIGIN?.split(",") || [
+      `https://eulearning.vercel.app`,
+    ],
     credentials: true,
   })
 );
 
-// Api Requiest Rate Limit
+// API Request Rate Limit
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   limit: 100,
-  standardHeaders: "draft-7",
+  standardHeaders: true,
   legacyHeaders: false,
 });
+
+// Apply the rate limiting middleware to all requests
+app.use(limiter);
 
 // APIs Routes
 app.use("/api/v1/auth", UserRoute);
@@ -48,7 +53,7 @@ app.use("/api/v1/notification", NotificationRoute);
 app.use("/api/v1/analytics", AnalyticsRoute);
 app.use("/api/v1/layout", LayoutRoute);
 
-// Rest API
+// Test Route
 app.use("/test", (req: Request, res: Response, next: NextFunction) => {
   res.status(200).send({
     success: true,
@@ -56,14 +61,12 @@ app.use("/test", (req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-// Unknown Route
+// Handle Unknown Routes
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
-  const err = new Error(`Route  ${req.originalUrl} not found!`) as any;
-  (res.statusCode = 404), next(err);
+  const err = new Error(`Route ${req.originalUrl} not found!`);
+  res.status(404);
+  next(err);
 });
-
-// Rate Limit Middleware
-app.use(limiter);
 
 // Error Middleware
 app.use(ErrorMiddleware);
