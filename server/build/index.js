@@ -27,11 +27,11 @@ exports.app.use((0, morgan_1.default)("dev"));
 exports.app.use((0, cookie_parser_1.default)());
 // Cross Origin Resource sharing
 // `http://localhost:3000`
-// (0, cors_1.default)({
-//     origin: [`https://eulearning.vercel.app`, `http://localhost:3000`],
-//     credentials: true,
-// })
-exports.app.use(cors_1());
+
+exports.app.use((0, cors_1.default)({
+    origin: [`https://eulearning.vercel.app`, `http://localhost:3000`],
+    credentials: true,
+}));
 // Api Requiest Rate Limit
 const limiter = (0, express_rate_limit_1.rateLimit)({
     windowMs: 15 * 60 * 1000,
