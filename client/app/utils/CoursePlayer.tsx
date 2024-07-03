@@ -22,7 +22,7 @@ const CoursePlayer: FC<Props> = ({ videoUrl, title }) => {
     if (!isYouTubeUrl(videoUrl)) {
       axios
         .post(
-          `https://e-ulearning-backend.vercel.app/api/v1/course/getVdoCipherOTP`,
+          `http://localhost:5000/api/v1/course/getVdoCipherOTP`,
           {
             videoId: videoUrl,
           }
