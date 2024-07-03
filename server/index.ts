@@ -10,7 +10,7 @@ import OrderRoute from "./routes/orderRoute";
 import NotificationRoute from "./routes/notificationRoute";
 import AnalyticsRoute from "./routes/analyticsRoute";
 import LayoutRoute from "./routes/layoutRoute";
-import { rateLimit } from "express-rate-limit";
+// import { rateLimit } from "express-rate-limit";
 
 // Configure dotenv
 dotenv.config();
@@ -35,15 +35,15 @@ app.use(
 );
 
 // API Request Rate Limit
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   limit: 100,
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
 
 // Apply the rate limiting middleware to all requests
-app.use(limiter);
+// app.use(limiter);
 
 // APIs Routes
 app.use("/api/v1/auth", UserRoute);
