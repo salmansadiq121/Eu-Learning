@@ -27,7 +27,7 @@ app.use(cookieParser());
 // `http://localhost:3000`
 app.use(
   cors({
-    origin: [`http://localhost:3000`],
+    origin: [`https://eulearning.vercel.app`],
     credentials: true,
   })
 );
